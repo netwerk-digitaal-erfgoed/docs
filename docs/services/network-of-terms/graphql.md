@@ -545,7 +545,13 @@ that states no date leaves the field `null`.
 `name` the source gives it, or both. RKDartists identifies a birth place in its thesaurus
 and names it in Dutch and English. A reference by name alone is one reference per name,
 so a client asking for two languages gets `Nederlands` and `Dutch` as separate entries.
-The vocabularies differ per source and are not harmonised.
+The vocabularies differ per source and are not harmonised, but where the `uri` belongs
+to a source the Network of Terms covers, as Regiotermen Fryslân’s GeoNames birth places
+do, `lookup` resolves it to a term with a `place` node of its own.
+
+Several `birthPlace` entries are alternatives the source could not decide between, not
+several places: RKDartists records every birthplace the literature gives for a painter
+like Sassetta, Cortona or Siena, and keeps the discussion in its scope note.
 
 **Occupations are roles**, in the shape of schema.org’s `Role`: the `occupation` as a
 reference where the source identifies it as a term, the `roleName` where the source only
