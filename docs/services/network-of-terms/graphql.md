@@ -462,7 +462,7 @@ what they did, their nationality, and the split of their name into given and fam
 name where the source states it. Their full names stay on `prefLabel` and `altLabel`,
 and their alignments to other sources on `exactMatch`, as for any term.
 
-```graphql title="Birth and death of the person a term denotes" {6-20}
+```graphql title="Birth and death of the person a term denotes" {6-29}
 query {
   lookup(uris: ["https://data.rkd.nl/artists/66219"], languages: [nl]) {
     result {
@@ -473,15 +473,24 @@ query {
           familyName { language value }
           birthDate
           deathDate
-          birthPlace { uri name { language value } }
-          deathPlace { uri name { language value } }
+          birthPlace {
+            term { uri name { language value } }
+            name { language value }
+          }
+          deathPlace {
+            term { uri name { language value } }
+            name { language value }
+          }
           hasOccupation {
             occupation { uri name { language value } }
             roleName { language value }
             startDate
             endDate
           }
-          nationality { uri name { language value } }
+          nationality {
+            term { uri name { language value } }
+            name { language value }
+          }
         }
       }
       ... on Error {
@@ -500,18 +509,24 @@ query {
     "familyName": [],
     "birthDate": "1606-07-15/1607",
     "deathDate": "1669-10-04",
-    "birthPlace": [
-      {
-        "uri": "https://data.rkd.nl/thesaurus/11",
-        "name": [{ "language": "nl", "value": "Leiden (stad)" }]
-      }
-    ],
-    "deathPlace": [
-      {
-        "uri": "https://data.rkd.nl/thesaurus/29",
-        "name": [{ "language": "nl", "value": "Amsterdam (stad)" }]
-      }
-    ],
+    "birthPlace": {
+      "term": [
+        {
+          "uri": "https://data.rkd.nl/thesaurus/11",
+          "name": [{ "language": "nl", "value": "Leiden (stad)" }]
+        }
+      ],
+      "name": []
+    },
+    "deathPlace": {
+      "term": [
+        {
+          "uri": "https://data.rkd.nl/thesaurus/29",
+          "name": [{ "language": "nl", "value": "Amsterdam (stad)" }]
+        }
+      ],
+      "name": []
+    },
     "hasOccupation": [
       {
         "occupation": null,
@@ -526,9 +541,10 @@ query {
         "endDate": null
       }
     ],
-    "nationality": [
-      { "uri": null, "name": [{ "language": "nl", "value": "Noord-Nederlands" }] }
-    ]
+    "nationality": {
+      "term": [],
+      "name": [{ "language": "nl", "value": "Noord-Nederlands" }]
+    }
   }
 }
 ```
@@ -541,13 +557,14 @@ such as `1620~` for circa. The value is passed through as the source states it a
 not validated, so parse it with an EDTF library rather than as a plain date. A source
 that states no date leaves the field `null`.
 
-**Places and nationality are references**: a `uri` from the source’s own vocabulary, the
-`name` the source gives it, or both. RKDartists identifies a birth place in its thesaurus
-and names it in Dutch and English. A reference by name alone is one reference per name,
-so a client asking for two languages gets `Nederlands` and `Dutch` as separate entries.
-The vocabularies differ per source and are not harmonised, but where the `uri` belongs
-to a source the Network of Terms covers, as Regiotermen Fryslân’s GeoNames birth places
-do, `lookup` resolves it to a term with a `place` node of its own.
+**Places and nationality come as what the source refers to and what it only names.**
+`term` lists the places as terms in the source’s own vocabulary, each with a `uri` and
+the names the vocabulary gives it, the shape of an `exactMatch`; `name` lists what the
+source states as text without identifying it. RKDartists identifies a birth place in its
+thesaurus and names it in Dutch and English, but states a nationality only as names. The
+vocabularies differ per source and are not harmonised, but where a `uri` belongs to a
+source the Network of Terms covers, as Regiotermen Fryslân’s GeoNames birth places do,
+`lookup` resolves it to a term with a `place` node of its own.
 
 Several `birthPlace` entries are alternatives the source could not decide between, not
 several places: RKDartists records every birthplace the literature gives for a painter
