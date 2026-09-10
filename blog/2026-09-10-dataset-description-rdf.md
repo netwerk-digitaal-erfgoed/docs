@@ -4,7 +4,7 @@ authors: [coret, ddeboer]
 tags: [rdf, dataset-register]
 ---
 
-To make a dataset findable across the heritage network, you register its [dataset description](https://docs.nde.nl/requirements-datasets/) – a machine-readable (RDF) record of the dataset – with the [NDE Dataset Register](https://datasetregister.netwerkdigitaalerfgoed.nl/?lang=en). If you already publish linked data, you don’t need to maintain a separate description file: you can let the Register read your description straight from your triplestore with a `SPARQL CONSTRUCT` query.
+If you already publish linked data, you don’t need a separate file for your [dataset description](https://docs.nde.nl/requirements-datasets/): the [NDE Dataset Register](https://datasetregister.netwerkdigitaalerfgoed.nl/?lang=en) can read it straight from your triplestore with a `SPARQL CONSTRUCT` query.
 
 <!-- truncate -->
 
